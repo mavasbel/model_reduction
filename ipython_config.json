@@ -1,0 +1,8 @@
+{
+    "InteractiveShell": {
+        "colors": "LightBG"
+    },
+    "StoreMagics": {
+        "autorestore": true
+    }
+}
