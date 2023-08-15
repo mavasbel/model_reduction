@@ -187,7 +187,6 @@ class ODEUtils:
 
         return xpVec, xcVec, vsVec, whVec
 
-
     @staticmethod
     def plot_inputs(tVec, tLims, uVec=None, whVec=None):
         idxLims = range(numpy.where(tVec[:, 0] >= tLims[0])[
