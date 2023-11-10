@@ -13,7 +13,7 @@ class ControlUtils:
 
     @staticmethod
     def hinfnorm(sys: Union[control.iosys.LinearIOSystem,control.NonlinearIOSystem,control.TransferFunction],
-                 freq=numpy.logspace(0, 8, 8000)) -> numpy.number:
+                 freq=numpy.logspace(0, 8, 5000)) -> numpy.number:
         """_summary_
 
         Args:
