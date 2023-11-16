@@ -13,7 +13,7 @@ class ControlUtils:
 
     @staticmethod
     def hinfnorm(sys: Union[control.iosys.LinearIOSystem,control.NonlinearIOSystem,control.TransferFunction],
-                 freq=numpy.logspace(0, 8, 5000)) -> numpy.number:
+                 freq=numpy.logspace(0, 8, 8000)) -> Tuple[numpy.number, Any]:
         """_summary_
 
         Args:
@@ -21,12 +21,17 @@ class ControlUtils:
             freq (_type_, optional): Frequency grid over which to find the norm. Defaults to numpy.logspace(0,5,1000).
 
         Returns:
-            _type_: The Hinf norm of the system
+            _type_: The Hinf norm of the system and its input-output pairs
         """
         if(sys.outputs > 1 or sys.outputs > 1):
-            return numpy.array([numpy.linalg.svd(sys(1.0j*w), compute_uv=False) for w in freq]).max()
+            freq_response = numpy.array( [ sys(1.0j*w) for w in freq ] )
+            HinfMIMO = numpy.amax( numpy.absolute(freq_response), axis=0 )
+            HinfSys = numpy.linalg.svd(freq_response, compute_uv=False).max()
+            return (HinfSys, HinfMIMO)
         else:
-            return numpy.array([numpy.abs(sys(1.0j*w)) for w in freq]).max()
+            freq_response = numpy.array( [ numpy.absolute(sys(1.0j*w)) for w in freq ] )
+            HinfSys = freq_response.max()
+            return (HinfSys, None)
         
     @staticmethod
     def balaced_truncation( sys: Union[control.LinearIOSystem,control.NonlinearIOSystem],

@@ -1,4 +1,4 @@
 
 *.ini
-__pycache__/*
-back/*
+__pycache__
+*.pickel
