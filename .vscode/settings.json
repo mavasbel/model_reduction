@@ -2,4 +2,5 @@
     "jupyter.kernels.filter": [],
     "python.analysis.typeCheckingMode": "basic",
     "jupyter.debugJustMyCode": false,
+    "terminal.integrated.shell.windows": "C:\\Windows\\SysWOW64\\cmd.exe"
 }

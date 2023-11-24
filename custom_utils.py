@@ -13,7 +13,7 @@ class ControlUtils:
 
     @staticmethod
     def hinfnorm(sys: Union[control.iosys.LinearIOSystem,control.NonlinearIOSystem,control.TransferFunction],
-                 freq=numpy.logspace(0, 8, 8000)) -> Tuple[numpy.number, Any]:
+                 freq=numpy.logspace(0, 8, 5000)) -> Tuple[numpy.number, Any]:
         """_summary_
 
         Args:
@@ -21,7 +21,8 @@ class ControlUtils:
             freq (_type_, optional): Frequency grid over which to find the norm. Defaults to numpy.logspace(0,5,1000).
 
         Returns:
-            _type_: The Hinf norm of the system and its input-output pairs
+            _type_: - (Hinf, None) when sys is SISO
+                    - (Hinf, HinfMIMO) when sys is MIMO [HinfMIMO contains Hinf for each element of the transfer matrix]
         """
         if(sys.outputs > 1 or sys.outputs > 1):
             freq_response = numpy.array( [ sys(1.0j*w) for w in freq ] )
