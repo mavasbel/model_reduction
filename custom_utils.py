@@ -1,6 +1,7 @@
 from typing import Union
 from typing import Tuple
 from typing import Any
+import itertools
 import numpy
 import sympy
 import scipy
@@ -24,14 +25,20 @@ class ControlUtils:
             _type_: - (Hinf, None) when sys is SISO
                     - (Hinf, HinfMIMO) when sys is MIMO [HinfMIMO contains Hinf for each element of the transfer matrix]
         """
-        if(sys.outputs > 1 or sys.outputs > 1):
-            freq_response = numpy.array( [ sys(1.0j*w) for w in freq ] )
-            HinfMIMO = numpy.amax( numpy.absolute(freq_response), axis=0 )
-            HinfSys = numpy.linalg.svd(freq_response, compute_uv=False).max()
+        if(sys.outputs > 1 or sys.inputs > 1):
+            HinfSys = control.linfnorm(sys)[0]
+            HinfMIMO = numpy.empty((sys.outputs,sys.inputs), dtype=numpy.float64)
+            HinfMIMO.fill(None)
+            for i, j in itertools.product(range(sys.outputs), range(sys.inputs)):
+                HinfMIMO[i,j] = control.linfnorm(sys[i,j])[0]
+            # freq_response = numpy.array( [ sys(1.0j*w) for w in freq ] )
+            # HinfMIMO = numpy.amax( numpy.absolute(freq_response), axis=0 )
+            # HinfSys = numpy.linalg.svd(freq_response, compute_uv=False).max()
             return (HinfSys, HinfMIMO)
         else:
-            freq_response = numpy.array( [ numpy.absolute(sys(1.0j*w)) for w in freq ] )
-            HinfSys = freq_response.max()
+            # freq_response = numpy.array( [ numpy.absolute(sys(1.0j*w)) for w in freq ] )
+            # HinfSys = freq_response.max()
+            HinfSys = control.linfnorm(sys)[0]
             return (HinfSys, None)
         
     @staticmethod
