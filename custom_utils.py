@@ -219,9 +219,9 @@ class ODEUtils:
         plantOrder = plant.A.shape[0]  # type: ignore
         Ap = plant.A
         Bw = plant.B[:, 0].reshape(plantOrder, 1)  # type: ignore
-        Bu = plant.B[:, 1].reshape(plantOrder, 1)  # type: ignore
+        Bu = plant.B[:, 1].reshape(plantOrder, 1) if plant.B.shape[1]>1 else plant.B[:, 0].reshape(plantOrder, 1)  # type: ignore
         Cv = plant.C[0, :].reshape(1, plantOrder)  # type: ignore
-        Cy = plant.C[1, :].reshape(1, plantOrder)  # type: ignore
+        # Cy = plant.C[1, :].reshape(1, plantOrder)  # type: ignore
 
         # Initialization of vectors save simulation
         xpVec = numpy.empty((plantOrder, steps))
@@ -255,7 +255,7 @@ class ODEUtils:
             # Plant input values for the interval
             vs = Cv@xpSubStart
             wh = (Cw@xck) + (Dw@vs)
-
+            
             # Save controller input, output, and state
             vsVec[:, i0:i1] = numpy.repeat(vs, i1-i0, 1)
             whVec[:, i0:i1] = numpy.repeat(wh, i1-i0, 1)
